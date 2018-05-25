@@ -135,7 +135,7 @@ public class PageRecyclerView extends RecyclerView {
         }else {
             mIndicatorView.setVisibility(GONE);
         }
-        //Log.d("change", "update: " + totalPage);
+        Log.d("change", "update: " + totalPage);
         mAutoGridLayoutManager.setTotalPages(temp);
     }
 

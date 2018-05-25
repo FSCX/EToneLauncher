@@ -4,7 +4,6 @@ import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -21,8 +20,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.topwise.etonelauncher.R;
-import com.topwise.etonelauncher.bean.AppNameIcon;
 import com.topwise.etonelauncher.model.AppNameAndIcon;
+import com.topwise.etonelauncher.model.AppNameIcon;
 import com.topwise.etonelauncher.util.PromptAlertDialog;
 import com.topwise.etonelauncher.view.PageIndicatorView;
 import com.topwise.etonelauncher.view.PageRecyclerView;
@@ -41,14 +40,14 @@ public class LauncherActivity extends AppCompatActivity {
 
     private static LauncherActivity launcherActivity;
 
-    private static UpadteAppReceive mUpadteAppReceive;
+    /*private static UpadteAppReceive mUpadteAppReceive;
     private IntentFilter intentFilter;
+    private ImageView mImageView;*/
 
-
-    private ImageView mImageView;
     int[] icons = new int[]{R.mipmap.extendicon1, R.mipmap.extendicon2,
             R.mipmap.extendicon3, R.mipmap.extendicon4,
             R.mipmap.extendicon5};
+    //定义一个二位数组，背景随机
     int[][] ram = new int[][]{{0, 2, 1}, {4, 3, 0}, {2, 1, 4}};
 
 
@@ -60,7 +59,7 @@ public class LauncherActivity extends AppCompatActivity {
         //supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_main);
 
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        //mToolbar = (Toolbar) findViewById(R.id.toolbar);
 
         initData();
         mTitle = (TextView) findViewById(R.id.title);
@@ -138,16 +137,15 @@ public class LauncherActivity extends AppCompatActivity {
             }
         });
         mRecyclerView.setAdapter(myAdapter);
-
     }
 
     @Override
     public void onBackPressed() {
-
+        //Message message = Message.obtain();
     }
 
     /**
-     * 去除本身app的显示
+     * 去除本身app的显示q
      */
     private  List<AppNameIcon> deleteAppItself(List<AppNameIcon> mAppNameIconList) {
         Log.d("mes", "deleteAppItself: ");
@@ -166,7 +164,6 @@ public class LauncherActivity extends AppCompatActivity {
 
     /**
      * 固定制定app的位置
-     *
      * @return
      */
     private List<AppNameIcon> fixListOrder() {
@@ -220,6 +217,9 @@ public class LauncherActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * 是一个系统广播监听recyclerview的数据更新
+     */
     public static class UpadteAppReceive extends BroadcastReceiver {
 
         @Override

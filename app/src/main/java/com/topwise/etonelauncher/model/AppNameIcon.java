@@ -1,4 +1,4 @@
-package com.topwise.etonelauncher.bean;
+package com.topwise.etonelauncher.model;
 
 import android.content.Intent;
 import android.graphics.drawable.Drawable;

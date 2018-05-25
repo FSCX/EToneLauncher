@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.res.Resources;
 
 import com.topwise.etonelauncher.R;
-import com.topwise.etonelauncher.bean.AppNameIcon;
 
 import java.util.ArrayList;
 import java.util.List;

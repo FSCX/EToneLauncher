@@ -13,8 +13,6 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
 
-import com.topwise.etonelauncher.bean.AppNameIcon;
-
 import java.util.ArrayList;
 import java.util.List;
 /**
@@ -37,7 +35,7 @@ public class AppNameAndIcon {
         drawable.draw(canvas);
         return bitmap;
     }
-
+    //应用图标进行压缩
     private Drawable zoomDrawable(Drawable drawable, int w, int h) {
         int width = drawable.getIntrinsicWidth();
         int height = drawable.getIntrinsicHeight();
@@ -52,6 +50,11 @@ public class AppNameAndIcon {
         return new BitmapDrawable(null, newbmp);
     }
 
+    /**
+     * 获取应用
+     * @param context
+     * @return
+     */
     public List getAppInfos(Context context) {
         Drawable drawable;
         mPackageManager = context.getPackageManager();
@@ -86,9 +89,7 @@ public class AppNameAndIcon {
                 Log.d("msg", "width" + width1 + "\n" + "height" + height1);
             }else{
                 drawable = packgeInfo.applicationInfo.loadIcon(mPackageManager);
-
             }
-
 
             Intent intent = mPackageManager.getLaunchIntentForPackage(packageName);
             AppNameIcon appNameIcon = new AppNameIcon(appName, drawable, className, packageName, intent);
