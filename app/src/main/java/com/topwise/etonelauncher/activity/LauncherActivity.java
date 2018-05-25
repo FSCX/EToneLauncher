@@ -104,6 +104,7 @@ public class LauncherActivity extends AppCompatActivity {
             @Override
             public void onItemClickListener(View view, int position) {
                 //intent = new Intent();
+                PromptAlertDialog alertDialog = new PromptAlertDialog(LauncherActivity.this);
 
                 Intent intent = mAppNameIconList.get(position).getIntentPackage();
                 PackageManager pm = LauncherActivity.this.getPackageManager();
@@ -111,15 +112,16 @@ public class LauncherActivity extends AppCompatActivity {
                     startActivity(intent);
                 } else {
                     if (position == 0) {
-                        Drawable drawable = getResources().getDrawable(R.mipmap.extendicon4);
-                        view.setBackground(drawable);
-                        String appPackage = "com.topwise.etone";
-                        String appClass = "com.topwise.etonepay.manager.LoginActivity";
-                        ComponentName componentName = new ComponentName(appPackage, appClass);
-                        Intent consume = new Intent();
-                        consume.setComponent(componentName);
-                        startActivity(consume);
-                        return;
+                            //Drawable drawable = getResources().getDrawable(R.mipmap.extendicon4);
+                            //view.setBackground(drawable);
+                            String appPackage = "com.topwise.etone";
+                            String appClass = "com.topwise.etonepay.manager.LoginActivity";
+                            ComponentName componentName = new ComponentName(appPackage, appClass);
+                            Intent consume = new Intent();
+                            consume.setComponent(componentName);
+                            startActivity(consume);
+                            return;
+
                     } else if (position == 2) {
                         String settingPackage = "com.android.settings";
                         String settingClass = "com.android.settings.Settings";
@@ -129,7 +131,7 @@ public class LauncherActivity extends AppCompatActivity {
                         startActivity(setting);
                         return;
                     } else {
-                        PromptAlertDialog alertDialog = new PromptAlertDialog(LauncherActivity.this);
+                        //PromptAlertDialog alertDialog = new PromptAlertDialog(LauncherActivity.this);
                         alertDialog.runAlertDialog();
                     }
                 }
@@ -225,12 +227,16 @@ public class LauncherActivity extends AppCompatActivity {
             switch (intent.getAction()) {
                 case "android.intent.action.PACKAGE_ADDED":
                 case "android.intent.action.PACKAGE_REMOVED":
+                case "android.intent.action.PACKAGE_CHANGED":
                     if (LauncherActivity.launcherActivity != null) {
                         LauncherActivity.launcherActivity.mAppNameIconList.clear();
                         List<AppNameIcon> appInfos = new AppNameAndIcon().getAppInfos(LauncherActivity.launcherActivity);
                         appInfos=LauncherActivity.launcherActivity.deleteAppItself(appInfos);
                         LauncherActivity.launcherActivity.mAppNameIconList.addAll(appInfos);
                         LauncherActivity.launcherActivity.myAdapter.notifyDataSetChanged();
+
+                        //更新总页数
+                        LauncherActivity.launcherActivity.mRecyclerView.update();
                     }
                     break;
                 default:

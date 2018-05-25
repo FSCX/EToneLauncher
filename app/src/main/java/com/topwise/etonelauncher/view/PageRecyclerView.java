@@ -3,6 +3,7 @@ package com.topwise.etonelauncher.view;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -111,7 +112,8 @@ public class PageRecyclerView extends RecyclerView {
     }
 
     // 更新页码指示器和相关数据
-    private void update() {
+    //private void update()
+    public void update() {
         // 计算总页数
         int temp = ((int) Math.ceil(myAdapter.dataList.size() / (double) (spanRow * spanColumn)));
         if (temp != totalPage) {
@@ -133,6 +135,7 @@ public class PageRecyclerView extends RecyclerView {
         }else {
             mIndicatorView.setVisibility(GONE);
         }
+        //Log.d("change", "update: " + totalPage);
         mAutoGridLayoutManager.setTotalPages(temp);
     }
 

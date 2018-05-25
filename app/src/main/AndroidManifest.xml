@@ -30,7 +30,9 @@
             </intent-filter>
         </activity>
 
-        <receiver android:name=".activity.LauncherActivity$UpadteAppReceive">
+        <receiver android:name=".activity.LauncherActivity$UpadteAppReceive"
+            android:exported="true"
+            android:enabled="true">
                 <intent-filter>
                     <action android:name="android.intent.action.PACKAGE_ADDED" />
                     <action android:name="android.intent.action.PACKAGE_REMOVED" />
