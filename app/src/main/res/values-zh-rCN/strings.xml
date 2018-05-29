@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">EToneLauncher</string>
+    <string name="ETonePay">易通金服</string>
+    <string name="alertdialog_title">正在开发</string>
+    <string name="alertdialog_message">正在开发，敬请期待！</string>
+
+    <string name="alertdialog_confirm">确定</string>
+    <string name="consume">易通收银</string>
+    <string name="market">应用市场</string>
+    <string name="system">系统设置</string>
+    <string name="shandongCard">山东卡通</string>
+    <string name="kernel">卡券核销</string>
+    <string name="TaddO">T+O</string>
+    <string name="Settlement">结算</string>
+</resources>

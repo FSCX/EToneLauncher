@@ -1,15 +1,20 @@
 package com.topwise.etonelauncher.activity;
 
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,6 +33,7 @@ import com.topwise.etonelauncher.view.PageRecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class LauncherActivity extends AppCompatActivity {
     private PageRecyclerView mRecyclerView = null;
@@ -38,7 +44,7 @@ public class LauncherActivity extends AppCompatActivity {
     private Toolbar mToolbar;//导航栏
     private TextView mTitle;//导航栏title
 
-    private static LauncherActivity launcherActivity;
+
 
     /*private static UpadteAppReceive mUpadteAppReceive;
     private IntentFilter intentFilter;
@@ -49,17 +55,29 @@ public class LauncherActivity extends AppCompatActivity {
             R.mipmap.extendicon5};
     //定义一个二位数组，背景随机
     int[][] ram = new int[][]{{0, 2, 1}, {4, 3, 0}, {2, 1, 4}};
+private UpadteAppReceive upadteAppReceive;
 
+    @Override
+    protected void onDestroy() {
+        unregisterReceiver(upadteAppReceive);
+        super.onDestroy();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //requestWindowFeature(Window.FEATURE_NO_TITLE);
 
-        //supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
+        IntentFilter intentFilter=new IntentFilter();
+        intentFilter.addAction("android.intent.action.PACKAGE_ADDED");
+        intentFilter.addAction("android.intent.action.PACKAGE_REMOVED");
+        intentFilter.addAction("android.intent.action.PACKAGE_CHANGED");
+        intentFilter.addAction("android.intent.action.PACKAGE_REPLACED");
+        intentFilter.setPriority(100);
+        intentFilter.addDataScheme("package");
+        upadteAppReceive = new UpadteAppReceive();
+        registerReceiver(upadteAppReceive,intentFilter);
+
         setContentView(R.layout.activity_main);
-
-        //mToolbar = (Toolbar) findViewById(R.id.toolbar);
 
         initData();
         mTitle = (TextView) findViewById(R.id.title);
@@ -77,7 +95,6 @@ public class LauncherActivity extends AppCompatActivity {
         //去除本身app应用
         mAppNameIconList=deleteAppItself(mAppNameIconList);
 
-        launcherActivity = LauncherActivity.this;
 
 
         //mAppNameIconList=fixListOrder();
@@ -94,6 +111,7 @@ public class LauncherActivity extends AppCompatActivity {
                 mAppNameIcon = mAppNameIconList.get(position);
                 ((MyHolder) holder).appName.setText(mAppNameIcon.getAppName());
                 //((MyHolder) holder).appIcon.setImageDrawable(mAppNameIcon.getAppIcon());
+
                 ((MyHolder) holder).appIcon.setImageDrawable(mAppNameIcon.getAppIcon());
                 Drawable drawable = getResources().getDrawable(icons[ram[((position % 9) / 3)][position % 3]]);
                 ((MyHolder) holder).appIcon.setBackground(drawable);
@@ -114,7 +132,7 @@ public class LauncherActivity extends AppCompatActivity {
                             //Drawable drawable = getResources().getDrawable(R.mipmap.extendicon4);
                             //view.setBackground(drawable);
                             String appPackage = "com.topwise.etone";
-                            String appClass = "com.topwise.etonepay.manager.LoginActivity";
+                            String appClass = "com.topwise.etonepay.manager.ConsumeAmountInputActivity";
                             ComponentName componentName = new ComponentName(appPackage, appClass);
                             Intent consume = new Intent();
                             consume.setComponent(componentName);
@@ -131,12 +149,51 @@ public class LauncherActivity extends AppCompatActivity {
                         return;
                     } else {
                         //PromptAlertDialog alertDialog = new PromptAlertDialog(LauncherActivity.this);
+                        /*AlertDialog.Builder builder = new AlertDialog.Builder(LauncherActivity.this);
+                        builder.setIcon(mAppNameIconList.get(position).appIcon);
+                        builder.setMessage(mAppNameIconList.get(position).getAppName() + R.string.alertdialog_message+"");
+                        builder.setPositiveButton(R.string.alertdialog_confirm, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+                            }
+                        }).show();*/
                         alertDialog.runAlertDialog();
                     }
                 }
             }
         });
         mRecyclerView.setAdapter(myAdapter);
+
+        //配置系统多种语言
+        Constants.activityList.add(this);
+        switchLanguage(Constants.langae);
+    }
+
+    //核心设置的代码
+    private void switchLanguage(String Language) {
+        Resources resources = getResources();// 获得res资源对象
+        Configuration config = resources.getConfiguration();// 获得设置对象
+        DisplayMetrics dm = resources.getDisplayMetrics();// 获得屏幕参数：主要是分辨率，像素等。
+
+        switch (Language) {
+            case "zh-rCN":
+                config.locale = Locale.CHINESE;
+                resources.updateConfiguration(config, dm);
+                break;
+            case "en-rUS":
+                config.locale = Locale.ENGLISH;
+                resources.updateConfiguration(config, dm);
+                break;
+            default:
+                break;
+        }
+    }
+    //配置系统多种语言
+    public static class Constants {
+        //系统默认是zh的类型
+        public static String langae = "zh-rCN";
+        public static List<Activity> activityList = new ArrayList<>();
     }
 
     @Override
@@ -166,7 +223,7 @@ public class LauncherActivity extends AppCompatActivity {
      * 固定制定app的位置
      * @return
      */
-    private List<AppNameIcon> fixListOrder() {
+    /*private List<AppNameIcon> fixListOrder() {
         List<AppNameIcon> list = new ArrayList();
         for (int i = 0; i < mAppNameIconList.size(); ) {
             AppNameIcon appNameIcon = mAppNameIconList.get(i);
@@ -175,8 +232,8 @@ public class LauncherActivity extends AppCompatActivity {
                 switch (packeName) {
                     case "com.topwise.etone.demo":
                     case "com.topwise.etonepay":
-                /*case "topwise.com.toolbartraining":
-                case "com.example.sch.myapplication":*/
+                *//*case "topwise.com.toolbartraining":
+                case "com.example.sch.myapplication":*//*
                         list.add(appNameIcon);
                         mAppNameIconList.remove(appNameIcon);
                         break;
@@ -188,7 +245,7 @@ public class LauncherActivity extends AppCompatActivity {
         }
         list.addAll(mAppNameIconList);
         return list;
-    }
+    }*/
 
     private void initData() {
         mAppNameAndIcon = new AppNameAndIcon();
@@ -220,24 +277,25 @@ public class LauncherActivity extends AppCompatActivity {
     /**
      * 是一个系统广播监听recyclerview的数据更新
      */
-    public static class UpadteAppReceive extends BroadcastReceiver {
+
+
+    public  class UpadteAppReceive extends BroadcastReceiver {
 
         @Override
         public void onReceive(Context context, Intent intent) {
+            Log.d("LauncherActivity","UpadteAppReceive onReceive");
             switch (intent.getAction()) {
                 case "android.intent.action.PACKAGE_ADDED":
                 case "android.intent.action.PACKAGE_REMOVED":
                 case "android.intent.action.PACKAGE_CHANGED":
-                    if (LauncherActivity.launcherActivity != null) {
-                        LauncherActivity.launcherActivity.mAppNameIconList.clear();
-                        List<AppNameIcon> appInfos = new AppNameAndIcon().getAppInfos(LauncherActivity.launcherActivity);
-                        appInfos=LauncherActivity.launcherActivity.deleteAppItself(appInfos);
-                        LauncherActivity.launcherActivity.mAppNameIconList.addAll(appInfos);
-                        LauncherActivity.launcherActivity.myAdapter.notifyDataSetChanged();
+                        LauncherActivity.this.mAppNameIconList.clear();
+                        List<AppNameIcon> appInfos = new AppNameAndIcon().getAppInfos(LauncherActivity.this);
+                        appInfos=LauncherActivity.this.deleteAppItself(appInfos);
+                        LauncherActivity.this.mAppNameIconList.addAll(appInfos);
+                        LauncherActivity.this.myAdapter.notifyDataSetChanged();
 
                         //更新总页数
-                        LauncherActivity.launcherActivity.mRecyclerView.update();
-                    }
+                        LauncherActivity.this.mRecyclerView.update();
                     break;
                 default:
                     break;
