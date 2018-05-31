@@ -19,8 +19,8 @@ import java.util.List;
 public class PageIndicatorView extends LinearLayout {
 
     private Context mContext = null;
-    private int dotSize = 5; // 指示器的大小（dp）
-    //private int dotSize = 15; // 指示器的大小（dp）
+    //private int dotSize = 5; // 指示器的大小（dp）
+    private int dotSize = 10; // 指示器的大小（dp）
 
 
     private int margins = 4; // 指示器间距（dp）

@@ -82,8 +82,9 @@ public class AppNameAndIcon {
             String appName = packgeInfo.applicationInfo.loadLabel(mPackageManager).toString();
 
             if(!packageName.equals("com.topwise.etone")) {
-                /*Drawable*/ drawable = packgeInfo.applicationInfo.loadIcon(mPackageManager);
-                //drawable = zoomDrawable(drawable1, 300, 300);
+                /*Drawable*/
+                Drawable drawable1 = packgeInfo.applicationInfo.loadIcon(mPackageManager);
+                drawable = zoomDrawable(drawable1, 250, 250);
                 int width1 = drawable.getIntrinsicWidth();
                 int height1 = drawable.getIntrinsicHeight();
                 Log.d("msg", "width" + width1 + "\n" + "height" + height1);

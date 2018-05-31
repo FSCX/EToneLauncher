@@ -2,16 +2,15 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:orientation="vertical"
+    android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    android:background="@drawable/shape_oval"
-    android:layout_height="match_parent">
+    android:orientation="vertical">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
         android:background="@mipmap/bg_navigation_notitle"
+        android:layout_height="?attr/actionBarSize"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
         app:title="">
@@ -24,41 +23,51 @@
             android:gravity="center"
             android:text=""
             android:textColor="@color/white"
-            android:textSize="@dimen/setting_title_size"/>
+            android:textSize="@dimen/setting_title_size" />
     </android.support.v7.widget.Toolbar>
-
     <LinearLayout
         android:layout_width="match_parent"
+        android:layout_height="160dp">
+        <ImageView
+            android:scaleType="centerInside"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@mipmap/banner" />
+    </LinearLayout>
+    <!--<LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="2"
+        android:layout_weight="1"
         android:gravity="center">
+
         <ImageView
             android:layout_width="wrap_content"
-            android:background="@mipmap/banner"
-            android:layout_height="wrap_content" />
-    </LinearLayout>
+            android:layout_height="wrap_content"
+            android:background="@mipmap/banner" />
+    </LinearLayout>-->
 
     <!--<LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="4">-->
-    <LinearLayout
+    <!--<LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="4.2"
         android:layout_marginTop="@dimen/content_margin_top"
-        android:gravity="center">
-        <com.topwise.etonelauncher.view.PageRecyclerView
-            android:id="@+id/cusom_swipe_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+        android:gravity="center">-->
+    <com.topwise.etonelauncher.view.PageRecyclerView
+        android:id="@+id/cusom_swipe_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
-        <com.topwise.etonelauncher.view.PageIndicatorView
-            android:id="@+id/indicator"
-            android:layout_width="match_parent"
-            android:layout_marginBottom="@dimen/indicator_margin_bottom"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"/>
-    </LinearLayout>
+    <com.topwise.etonelauncher.view.PageIndicatorView
+        android:id="@+id/indicator"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="2dp"
+        />
+    <!--</LinearLayout>-->
 
 </LinearLayout>
