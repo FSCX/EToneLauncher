@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">EToneLauncher</string>
-    <string name="ETonePay">etonepay</string>
+    <string name="ETonePay">EtonePay</string>
     <string name="alertdialog_title">being developed</string>
     <string name="alertdialog_message">being developed，coming soon！</string>
 
     <string name="alertdialog_confirm">confirm</string>
-    <string name="consume">etone consume</string>
+    <string name="consume">etonepay</string>
     <string name="market">market</string>
     <string name="system">system setup</string>
     <string name="shandongCard">shandong card</string>

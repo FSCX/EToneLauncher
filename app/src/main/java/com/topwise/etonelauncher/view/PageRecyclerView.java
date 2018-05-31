@@ -115,7 +115,11 @@ public class PageRecyclerView extends RecyclerView {
     //private void update()
     public void update() {
         // 计算总页数
+
+        Log.i("msg","size:" + myAdapter.dataList.size() + ",spanRow:" + spanRow + ",spanColumn:" + spanColumn);
         int temp = ((int) Math.ceil(myAdapter.dataList.size() / (double) (spanRow * spanColumn)));
+
+        Log.i("msg","temp:" + temp);
         if (temp != totalPage) {
             mIndicatorView.initIndicator(temp);
             // 页码减少且当前页为最后一页
@@ -232,6 +236,9 @@ public class PageRecyclerView extends RecyclerView {
                 //holder.itemView.getLayoutParams().width = itemWidth + pageMargin * 2;
                 holder.itemView.getLayoutParams().width = itemWidth + pageMargin * 2;
                 holder.itemView.setPadding(pageMargin, 0, pageMargin, 0);
+
+                //更新
+                //notifyDataSetChanged();
             } else {
                 int m = position % (spanRow * spanColumn);
                 if (m < spanRow) {
@@ -245,29 +252,32 @@ public class PageRecyclerView extends RecyclerView {
                 } else {
                     // 中间的正常显示
                     holder.itemView.getLayoutParams().width = itemWidth;
-                    holder.itemView.setPadding(0, 0, 0, 0);
-                    //holder.itemView.setPadding(0, 0, 0, 0);
+                    holder.itemView.setPadding(0, 0, 0,     0);
                 }
             }
 
             countRealPosition(position);
+            //realPosition = position;
             holder.itemView.setTag(realPosition);
             setListener(holder);
 
             if (realPosition < dataList.size()) {
+                Log.i("msg","realPosition:" + realPosition + ",size:" + dataList.size());
                 holder.itemView.setVisibility(View.VISIBLE);
                 mCallBack.onBindViewHolder(holder, realPosition);
             } else {
+                Log.i("msg","==== realPosition:" + realPosition + ",size:" + dataList.size());
                 holder.itemView.setVisibility(View.INVISIBLE);
             }
         }
 
         @Override
         public int getItemCount() {
+            itemCount = dataList.size() + spanRow * spanColumn;
             return itemCount;
         }
 
-        private void countRealPosition(int position) {
+        public void countRealPosition(int position) {
             // 为了使Item从左到右从上到下排列，需要position的值
             int m = position % (spanRow * spanColumn);
             switch (m) {

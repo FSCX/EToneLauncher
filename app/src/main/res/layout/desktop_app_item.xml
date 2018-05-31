@@ -31,6 +31,9 @@
             android:layout_gravity="center"
             android:textColor="@color/white"
             android:textSize="16sp"
+            android:singleLine="true"
+            android:paddingRight="3dp"
+            android:paddingLeft="3dp"
             android:layout_marginTop="-30dp"
             android:text="name"/>
     </LinearLayout>

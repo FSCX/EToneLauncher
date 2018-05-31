@@ -18,7 +18,7 @@ public class DataDesktop {
         if (nameAndIcons.size() == 0) {
             Resources resources = context.getResources();
 
-            AppNameIcon consume = new AppNameIcon(resources.getString(R.string.ETonePay),resources.getDrawable(R.mipmap.etonpay, null), null, null,null);
+            AppNameIcon consume = new AppNameIcon(resources.getString(R.string.consume),resources.getDrawable(R.mipmap.etonpay, null), null, null,null);
             nameAndIcons.add(consume);
 
             AppNameIcon market = new AppNameIcon(resources.getString(R.string.market), resources.getDrawable(R.mipmap.application_market, null), null, null,null);

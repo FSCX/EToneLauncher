@@ -1,20 +1,16 @@
 package com.topwise.etonelauncher.activity;
 
-import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
-import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,13 +23,12 @@ import android.widget.Toast;
 import com.topwise.etonelauncher.R;
 import com.topwise.etonelauncher.model.AppNameAndIcon;
 import com.topwise.etonelauncher.model.AppNameIcon;
+import com.topwise.etonelauncher.util.Language;
 import com.topwise.etonelauncher.util.PromptAlertDialog;
 import com.topwise.etonelauncher.view.PageIndicatorView;
 import com.topwise.etonelauncher.view.PageRecyclerView;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 public class LauncherActivity extends AppCompatActivity {
     private PageRecyclerView mRecyclerView = null;
@@ -43,7 +38,9 @@ public class LauncherActivity extends AppCompatActivity {
     private AppNameAndIcon mAppNameAndIcon;
     private Toolbar mToolbar;//导航栏
     private TextView mTitle;//导航栏title
-
+    //设置语言
+    private Language mLanguage;
+    private Language.Constants mConstants;
 
 
     /*private static UpadteAppReceive mUpadteAppReceive;
@@ -55,7 +52,8 @@ public class LauncherActivity extends AppCompatActivity {
             R.mipmap.extendicon5};
     //定义一个二位数组，背景随机
     int[][] ram = new int[][]{{0, 2, 1}, {4, 3, 0}, {2, 1, 4}};
-private UpadteAppReceive upadteAppReceive;
+
+    private UpadteAppReceive upadteAppReceive;//广播
 
     @Override
     protected void onDestroy() {
@@ -108,10 +106,11 @@ private UpadteAppReceive upadteAppReceive;
 
             @Override
             public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+                Log.i("msg","position:" + position);
                 mAppNameIcon = mAppNameIconList.get(position);
                 ((MyHolder) holder).appName.setText(mAppNameIcon.getAppName());
                 //((MyHolder) holder).appIcon.setImageDrawable(mAppNameIcon.getAppIcon());
-
+                Log.i("msg","position:" + position + ",name:" + mAppNameIcon.getAppName());
                 ((MyHolder) holder).appIcon.setImageDrawable(mAppNameIcon.getAppIcon());
                 Drawable drawable = getResources().getDrawable(icons[ram[((position % 9) / 3)][position % 3]]);
                 ((MyHolder) holder).appIcon.setBackground(drawable);
@@ -129,10 +128,8 @@ private UpadteAppReceive upadteAppReceive;
                     startActivity(intent);
                 } else {
                     if (position == 0) {
-                            //Drawable drawable = getResources().getDrawable(R.mipmap.extendicon4);
-                            //view.setBackground(drawable);
                             String appPackage = "com.topwise.etone";
-                            String appClass = "com.topwise.etonepay.manager.ConsumeAmountInputActivity";
+                            String appClass = "com.topwise.etonepay.activity.ConsumeAmountInputActivity";
                             ComponentName componentName = new ComponentName(appPackage, appClass);
                             Intent consume = new Intent();
                             consume.setComponent(componentName);
@@ -148,16 +145,6 @@ private UpadteAppReceive upadteAppReceive;
                         startActivity(setting);
                         return;
                     } else {
-                        //PromptAlertDialog alertDialog = new PromptAlertDialog(LauncherActivity.this);
-                        /*AlertDialog.Builder builder = new AlertDialog.Builder(LauncherActivity.this);
-                        builder.setIcon(mAppNameIconList.get(position).appIcon);
-                        builder.setMessage(mAppNameIconList.get(position).getAppName() + R.string.alertdialog_message+"");
-                        builder.setPositiveButton(R.string.alertdialog_confirm, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-
-                            }
-                        }).show();*/
                         alertDialog.runAlertDialog();
                     }
                 }
@@ -166,12 +153,17 @@ private UpadteAppReceive upadteAppReceive;
         mRecyclerView.setAdapter(myAdapter);
 
         //配置系统多种语言
-        Constants.activityList.add(this);
-        switchLanguage(Constants.langae);
+        mLanguage = new Language(LauncherActivity.this);
+        mConstants = new Language.Constants();
+        mConstants.activityList.add(this);
+        mLanguage.switchLanguage(mConstants.language);
+
+        //Constants.activityList.add(this);
+        //switchLanguage(Constants.langae);
     }
 
     //核心设置的代码
-    private void switchLanguage(String Language) {
+    /*private void switchLanguage(String Language) {
         Resources resources = getResources();// 获得res资源对象
         Configuration config = resources.getConfiguration();// 获得设置对象
         DisplayMetrics dm = resources.getDisplayMetrics();// 获得屏幕参数：主要是分辨率，像素等。
@@ -194,7 +186,7 @@ private UpadteAppReceive upadteAppReceive;
         //系统默认是zh的类型
         public static String langae = "zh-rCN";
         public static List<Activity> activityList = new ArrayList<>();
-    }
+    }*/
 
     @Override
     public void onBackPressed() {
@@ -284,12 +276,33 @@ private UpadteAppReceive upadteAppReceive;
         @Override
         public void onReceive(Context context, Intent intent) {
             Log.d("LauncherActivity","UpadteAppReceive onReceive");
+            //Context context = LauncherActivity.this;
+            //String pkgName;
+            List<AppNameIcon> appInfos;
             switch (intent.getAction()) {
                 case "android.intent.action.PACKAGE_ADDED":
+                    //Log.i("msg","data:" + intent.getDataString());
+                    //pkgName = intent.getDataString().substring(8);
+                    //LauncherActivity.this.mAppNameIconList.clear();
+                    // List<AppNameIcon> appInfos = new AppNameAndIcon().getAppInfos(LauncherActivity.this);
+                    //appInfos = /*new AppNameAndIcon()*/mAppNameAndIcon.addApp(LauncherActivity.this,pkgName);
+                    //appInfos=LauncherActivity.this.deleteAppItself(appInfos);
+                    //LauncherActivity.this.mAppNameIconList.addAll(appInfos);
+                    //mAppNameAndIcon.addApp(LauncherActivity.this,pkgName);
+                    //LauncherActivity.this.myAdapter.notifyDataSetChanged();
+
+                    //更新总页数
+                    //LauncherActivity.this.mRecyclerView.update();
+                    //break;
+
                 case "android.intent.action.PACKAGE_REMOVED":
                 case "android.intent.action.PACKAGE_CHANGED":
+                case "android.intent.action.PACKAGE_REPLACED":
+                        Log.i("msg","data:" + intent.getDataString());
+                        //pkgName = intent.getDataString();
                         LauncherActivity.this.mAppNameIconList.clear();
-                        List<AppNameIcon> appInfos = new AppNameAndIcon().getAppInfos(LauncherActivity.this);
+                        appInfos = new AppNameAndIcon().getAppInfos(LauncherActivity.this);
+                        //List<AppNameIcon> appInfos = new AppNameAndIcon().addApp(context,pkgName);
                         appInfos=LauncherActivity.this.deleteAppItself(appInfos);
                         LauncherActivity.this.mAppNameIconList.addAll(appInfos);
                         LauncherActivity.this.myAdapter.notifyDataSetChanged();
