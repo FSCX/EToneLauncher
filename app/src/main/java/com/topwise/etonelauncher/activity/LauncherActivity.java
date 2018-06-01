@@ -122,46 +122,7 @@ public class LauncherActivity extends AppCompatActivity {
                 if (null != intent && pm.queryIntentActivities(intent, 0).size() > 0) {
                     startActivity(intent);
                 } else {
-                    if (position == 0) {
-                            String appPackage = "com.topwise.etone";
-                            String appClass = "com.topwise.etonepay.activity.ConsumeAmountInputActivity";
-                            ComponentName componentName = new ComponentName(appPackage, appClass);
-                            Intent consume = new Intent();
-                            consume.setComponent(componentName);
-                            startActivity(consume);
-                            return;
-
-                    } else if (position == 2) {
-                        String settingPackage = "com.android.settings";
-                        String settingClass = "com.android.settings.Settings";
-                        ComponentName componentName = new ComponentName(settingPackage, settingClass);
-                        Intent setting = new Intent();
-                        setting.setComponent(componentName);
-                        startActivity(setting);
-                        return;
-                    } else {
-
-                        //此事自定义Dialog
-                    String alert_message = LauncherActivity.this.getString(R.string.alertdialog_message);
-                        CustomDialog.Builder customBuilder = new
-                                CustomDialog.Builder(LauncherActivity.this);
-                                customBuilder.setTitle(R.string.alertdialog_title)
-                                .setIcon(mAppNameIconList.get(position).getAppIcon())
-                                .setMessage(mAppNameIconList.get(position).getAppName() + "  " + alert_message)
-                                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        dialog.dismiss();
-                                    }
-                                })
-                                .setPositiveButton(R.string.alertdialog_confirm,
-                                        new DialogInterface.OnClickListener() {
-                                            public void onClick(DialogInterface dialog, int which) {
-                                                dialog.dismiss();
-                                            }
-                                        });
-                        dialog = customBuilder.create();
-                        dialog.show();
-                    }
+                    fixListOrder(position);
                 }
             }
         });
@@ -199,31 +160,53 @@ public class LauncherActivity extends AppCompatActivity {
     }
 
     /**
-     * 固定制定app的位置
+     * 点击apk图标执行跳转
      * @return
      */
-    private List<AppNameIcon> fixListOrder() {
-        List<AppNameIcon> list = new ArrayList();
-        for (int i = 0; i < mAppNameIconList.size(); ) {
-            AppNameIcon appNameIcon = mAppNameIconList.get(i);
-            String packeName = appNameIcon.getAppPackage();
-            if (packeName != null) {
-                switch (packeName) {
-                    case "com.topwise.etone":
-                    case "com.topwise.etonepay":
-                    case "topwise.com.toolbartraining":
-                    case "com.example.sch.myapplication":
-                        list.add(appNameIcon);
-                        mAppNameIconList.remove(appNameIcon);
-                        break;
-                    default:
-                        i++;
-                        break;
-                }
-            }
+    private void fixListOrder(int position) {
+
+        String appPackage;
+        String appClass;
+        ComponentName componentName;
+        Intent intent = new Intent();
+
+        switch(position){
+            case 0:
+                appPackage = "com.topwise.etone";
+                appClass = "com.topwise.etonepay.activity.ConsumeAmountInputActivity";
+                componentName = new ComponentName(appPackage, appClass);
+                intent.setComponent(componentName);
+                startActivity(intent);
+                break;
+            case 2:
+                appPackage = "com.android.settings";
+                appClass = "com.android.settings.Settings";
+                componentName = new ComponentName(appPackage, appClass);
+                intent.setComponent(componentName);
+                startActivity(intent);
+                break;
+           default:
+               String alert_message = LauncherActivity.this.getString(R.string.alertdialog_message);
+               CustomDialog.Builder customBuilder = new
+                       CustomDialog.Builder(LauncherActivity.this);
+               customBuilder.setTitle(R.string.alertdialog_title)
+                       .setIcon(mAppNameIconList.get(position).getAppIcon())
+                       .setMessage(mAppNameIconList.get(position).getAppName() + "  " + alert_message)
+                       .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                           public void onClick(DialogInterface dialog, int which) {
+                               dialog.dismiss();
+                           }
+                       })
+                       .setPositiveButton(R.string.alertdialog_confirm,
+                               new DialogInterface.OnClickListener() {
+                                   public void onClick(DialogInterface dialog, int which) {
+                                       dialog.dismiss();
+                                   }
+                               });
+               dialog = customBuilder.create();
+               dialog.show();
+               break;
         }
-        list.addAll(mAppNameIconList);
-        return list;
     }
 
     private void initData() {
@@ -256,8 +239,6 @@ public class LauncherActivity extends AppCompatActivity {
     /**
      * 是一个系统广播监听recyclerview的数据更新
      */
-
-
     public  class UpadteAppReceive extends BroadcastReceiver {
 
         @Override
