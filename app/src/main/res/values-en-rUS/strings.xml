@@ -13,4 +13,5 @@
     <string name="kernel">card cancellation</string>
     <string name="TaddO">T+O</string>
     <string name="Settlement">settlement</string>
+    <string name="line">CustomAlertDialog</string>
 </resources>

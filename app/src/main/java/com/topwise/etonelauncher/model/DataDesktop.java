@@ -13,7 +13,7 @@ import java.util.List;
  */
 public class DataDesktop {
 
-    private List<AppNameIcon> nameAndIcons = new ArrayList<>();
+    public List<AppNameIcon> nameAndIcons = new ArrayList<>();
     public List<AppNameIcon> appInfos(Context context) {
         if (nameAndIcons.size() == 0) {
             Resources resources = context.getResources();

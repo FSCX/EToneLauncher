@@ -3,6 +3,7 @@ package com.topwise.etonelauncher.activity;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
@@ -21,13 +22,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.topwise.etonelauncher.R;
+import com.topwise.etonelauncher.custom.CustomDialog;
 import com.topwise.etonelauncher.model.AppNameAndIcon;
 import com.topwise.etonelauncher.model.AppNameIcon;
 import com.topwise.etonelauncher.util.Language;
-import com.topwise.etonelauncher.util.PromptAlertDialog;
 import com.topwise.etonelauncher.view.PageIndicatorView;
 import com.topwise.etonelauncher.view.PageRecyclerView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class LauncherActivity extends AppCompatActivity {
@@ -38,14 +40,10 @@ public class LauncherActivity extends AppCompatActivity {
     private AppNameAndIcon mAppNameAndIcon;
     private Toolbar mToolbar;//导航栏
     private TextView mTitle;//导航栏title
+    private CustomDialog dialog;//提示
     //设置语言
     private Language mLanguage;
     private Language.Constants mConstants;
-
-
-    /*private static UpadteAppReceive mUpadteAppReceive;
-    private IntentFilter intentFilter;
-    private ImageView mImageView;*/
 
     int[] icons = new int[]{R.mipmap.extendicon1, R.mipmap.extendicon2,
             R.mipmap.extendicon3, R.mipmap.extendicon4,
@@ -93,10 +91,9 @@ public class LauncherActivity extends AppCompatActivity {
         //去除本身app应用
         mAppNameIconList=deleteAppItself(mAppNameIconList);
 
-
-
+        //固定前七个应用
         //mAppNameIconList=fixListOrder();
-        // 设置数据
+
         myAdapter = mRecyclerView.new PageAdapter(mAppNameIconList, new PageRecyclerView.CallBack() {
             @Override
             public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -119,8 +116,6 @@ public class LauncherActivity extends AppCompatActivity {
 
             @Override
             public void onItemClickListener(View view, int position) {
-                //intent = new Intent();
-                PromptAlertDialog alertDialog = new PromptAlertDialog(LauncherActivity.this);
 
                 Intent intent = mAppNameIconList.get(position).getIntentPackage();
                 PackageManager pm = LauncherActivity.this.getPackageManager();
@@ -145,7 +140,27 @@ public class LauncherActivity extends AppCompatActivity {
                         startActivity(setting);
                         return;
                     } else {
-                        alertDialog.runAlertDialog();
+
+                        //此事自定义Dialog
+                    String alert_message = LauncherActivity.this.getString(R.string.alertdialog_message);
+                        CustomDialog.Builder customBuilder = new
+                                CustomDialog.Builder(LauncherActivity.this);
+                                customBuilder.setTitle(R.string.alertdialog_title)
+                                .setIcon(mAppNameIconList.get(position).getAppIcon())
+                                .setMessage(mAppNameIconList.get(position).getAppName() + "  " + alert_message)
+                                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                    }
+                                })
+                                .setPositiveButton(R.string.alertdialog_confirm,
+                                        new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                dialog.dismiss();
+                                            }
+                                        });
+                        dialog = customBuilder.create();
+                        dialog.show();
                     }
                 }
             }
@@ -157,36 +172,8 @@ public class LauncherActivity extends AppCompatActivity {
         mConstants = new Language.Constants();
         mConstants.activityList.add(this);
         mLanguage.switchLanguage(mConstants.language);
-
-        //Constants.activityList.add(this);
-        //switchLanguage(Constants.langae);
     }
 
-    //核心设置的代码
-    /*private void switchLanguage(String Language) {
-        Resources resources = getResources();// 获得res资源对象
-        Configuration config = resources.getConfiguration();// 获得设置对象
-        DisplayMetrics dm = resources.getDisplayMetrics();// 获得屏幕参数：主要是分辨率，像素等。
-
-        switch (Language) {
-            case "zh-rCN":
-                config.locale = Locale.CHINESE;
-                resources.updateConfiguration(config, dm);
-                break;
-            case "en-rUS":
-                config.locale = Locale.ENGLISH;
-                resources.updateConfiguration(config, dm);
-                break;
-            default:
-                break;
-        }
-    }
-    //配置系统多种语言
-    public static class Constants {
-        //系统默认是zh的类型
-        public static String langae = "zh-rCN";
-        public static List<Activity> activityList = new ArrayList<>();
-    }*/
 
     @Override
     public void onBackPressed() {
@@ -215,17 +202,17 @@ public class LauncherActivity extends AppCompatActivity {
      * 固定制定app的位置
      * @return
      */
-    /*private List<AppNameIcon> fixListOrder() {
+    private List<AppNameIcon> fixListOrder() {
         List<AppNameIcon> list = new ArrayList();
         for (int i = 0; i < mAppNameIconList.size(); ) {
             AppNameIcon appNameIcon = mAppNameIconList.get(i);
             String packeName = appNameIcon.getAppPackage();
             if (packeName != null) {
                 switch (packeName) {
-                    case "com.topwise.etone.demo":
+                    case "com.topwise.etone":
                     case "com.topwise.etonepay":
-                *//*case "topwise.com.toolbartraining":
-                case "com.example.sch.myapplication":*//*
+                    case "topwise.com.toolbartraining":
+                    case "com.example.sch.myapplication":
                         list.add(appNameIcon);
                         mAppNameIconList.remove(appNameIcon);
                         break;
@@ -237,7 +224,7 @@ public class LauncherActivity extends AppCompatActivity {
         }
         list.addAll(mAppNameIconList);
         return list;
-    }*/
+    }
 
     private void initData() {
         mAppNameAndIcon = new AppNameAndIcon();

@@ -16,4 +16,5 @@
     <dimen name="indicator_margin_bottom">2dp</dimen>
     <dimen name="item_layout_width">115dp</dimen>
     <dimen name="item_layout_height">113dp</dimen>
+    <dimen name="bbuton_rounded_corner_radius">20sp</dimen>
 </resources>

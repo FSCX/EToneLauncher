@@ -12,4 +12,5 @@
     <string name="kernel">卡券核销</string>
     <string name="TaddO">T+O</string>
     <string name="Settlement">结算</string>
+    <string name="line">CustomAlertDialog</string>
 </resources>
