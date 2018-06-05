@@ -29,7 +29,6 @@ import com.topwise.etonelauncher.util.Language;
 import com.topwise.etonelauncher.view.PageIndicatorView;
 import com.topwise.etonelauncher.view.PageRecyclerView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class LauncherActivity extends AppCompatActivity {
@@ -142,7 +141,7 @@ public class LauncherActivity extends AppCompatActivity {
     }
 
     /**
-     * 去除本身app的显示q
+     * 去除本身app的显示
      */
     private  List<AppNameIcon> deleteAppItself(List<AppNameIcon> mAppNameIconList) {
         Log.d("mes", "deleteAppItself: ");
@@ -192,11 +191,11 @@ public class LauncherActivity extends AppCompatActivity {
                customBuilder.setTitle(R.string.alertdialog_title)
                        .setIcon(mAppNameIconList.get(position).getAppIcon())
                        .setMessage(mAppNameIconList.get(position).getAppName() + "  " + alert_message)
-                       .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                       /*.setNegativeButton("取消", new DialogInterface.OnClickListener() {
                            public void onClick(DialogInterface dialog, int which) {
                                dialog.dismiss();
                            }
-                       })
+                       })*/
                        .setPositiveButton(R.string.alertdialog_confirm,
                                new DialogInterface.OnClickListener() {
                                    public void onClick(DialogInterface dialog, int which) {
@@ -245,7 +244,7 @@ public class LauncherActivity extends AppCompatActivity {
         public void onReceive(Context context, Intent intent) {
             Log.d("LauncherActivity","UpadteAppReceive onReceive");
             //Context context = LauncherActivity.this;
-            //String pkgName;
+            String pkgName;
             List<AppNameIcon> appInfos;
             switch (intent.getAction()) {
                 case "android.intent.action.PACKAGE_ADDED":
@@ -259,9 +258,12 @@ public class LauncherActivity extends AppCompatActivity {
                     //mAppNameAndIcon.addApp(LauncherActivity.this,pkgName);
                     //LauncherActivity.this.myAdapter.notifyDataSetChanged();
 
+                    pkgName = intent.getDataString().substring(8);
+                    mAppNameAndIcon.addApp(LauncherActivity.this, pkgName);
+                    LauncherActivity.this.myAdapter.notifyDataSetChanged();
                     //更新总页数
-                    //LauncherActivity.this.mRecyclerView.update();
-                    //break;
+                    LauncherActivity.this.mRecyclerView.update();
+                    break;
 
                 case "android.intent.action.PACKAGE_REMOVED":
                 case "android.intent.action.PACKAGE_CHANGED":

@@ -22,6 +22,25 @@ import java.util.List;
 public class AppNameAndIcon {
     private List<AppNameIcon> mAppNameIconList = new ArrayList<>();
     private PackageManager mPackageManager;
+    private static final String PACKAGE_ADDED = "android.intent.action.PACKAGE_ADDED";
+    private static final String PACKAGE_REMOVED = "android.intent.action.PACKAGE_REMOVED";
+    private static final String PACKAGE_REPLACED = "android.intent.action.PACKAGE_REPLACED";
+
+
+    //在子线程去去取apk
+    /*private Handler mHandler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            //super.handleMessage(msg);
+            switch (msg.what){
+                case WRITE_DATA_APP:
+                    //mAppNameIconList.add(mAppNameIcon);
+                    break;
+                default:
+                    break;
+            }
+        }
+    };*/
 
     //Drawable压缩方法
     private Bitmap drawableToBitmap(Drawable drawable) {
@@ -55,11 +74,12 @@ public class AppNameAndIcon {
      * @param context
      * @return
      */
-    public List getAppInfos(Context context) {
+    public List getAppInfos(final Context context) {
         Drawable drawable;
         mPackageManager = context.getPackageManager();
         List<PackageInfo> packgeInfos = mPackageManager.getInstalledPackages(PackageManager.GET_UNINSTALLED_PACKAGES);
        // mAppNameIconList = new ArrayList<>();
+
 
         //调用固定的数据
         DataDesktop desktop = new DataDesktop();
@@ -73,16 +93,12 @@ public class AppNameAndIcon {
             if (!filterApp(appInfo)&&!appInfo.packageName.equals("com.topwise.etone.demo")) {
                 continue;
             }
-            /***
-             * 固定背景图（把默认获取的应用图标覆盖）
-             */
 
             String packageName = packgeInfo.packageName;
             String className = packgeInfo.applicationInfo.className;
             String appName = packgeInfo.applicationInfo.loadLabel(mPackageManager).toString();
 
             if(!packageName.equals("com.topwise.etone")) {
-                /*Drawable*/
                 Drawable drawable1 = packgeInfo.applicationInfo.loadIcon(mPackageManager);
                 drawable = zoomDrawable(drawable1, 250, 250);
                 int width1 = drawable.getIntrinsicWidth();
@@ -103,7 +119,8 @@ public class AppNameAndIcon {
         Drawable drawable;
         //Drawable drawable1
         mPackageManager = context.getPackageManager();
-        List<PackageInfo> packgeInfos = mPackageManager.getInstalledPackages(PackageManager.GET_UNINSTALLED_PACKAGES);
+        //List<PackageInfo> packgeInfos = mPackageManager.getInstalledPackages(PackageManager.GET_UNINSTALLED_PACKAGES);
+        List<PackageInfo> packgeInfos = mPackageManager.getInstalledPackages(PackageManager.GET_ACTIVITIES);
         Log.i("msg","==== addApp pkgName:" + pkgName);
         //加载桌面数据
         for (PackageInfo packgeInfo : packgeInfos) {
@@ -111,9 +128,6 @@ public class AppNameAndIcon {
             ApplicationInfo appInfo = packgeInfo.applicationInfo;
             Log.i("msg","pkgName:   " + appInfo.packageName);
             if (appInfo.packageName.equals(pkgName)) {
-                /***
-                 * 固定背景图（把默认获取的应用图标覆盖）
-                 */
 
                 String packageName = packgeInfo.packageName;
                 String className = packgeInfo.applicationInfo.className;
@@ -127,6 +141,7 @@ public class AppNameAndIcon {
                 Log.d("msg", "width" + width1 + "\n" + "height" + height1);
 
                 Intent intent = mPackageManager.getLaunchIntentForPackage(packageName);
+
                 AppNameIcon appNameIcon = new AppNameIcon(appName, drawable, className, packageName, intent);
                 mAppNameIconList.add(appNameIcon);
                 break;
@@ -134,7 +149,6 @@ public class AppNameAndIcon {
         }
         return mAppNameIconList;
     }
-
 
 
     //判断某一个应用程序是不是系统的应用程序，

@@ -170,7 +170,7 @@ public class CustomDialog extends Dialog {
             // set the dialog title
             ((TextView) layout.findViewById(R.id.title)).setText(title);
             //
-            ((ImageView)layout.findViewById(R.id.icon)).setBackground(icon);
+            ((ImageView)layout.findViewById(R.id.icon)).setImageDrawable(icon);
             // set the confirm button
             if (positiveButtonText != null) {
                 ((Button) layout.findViewById(R.id.positiveButton)).setText(positiveButtonText);
