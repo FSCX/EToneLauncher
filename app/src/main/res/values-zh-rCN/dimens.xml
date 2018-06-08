@@ -3,6 +3,7 @@
     <dimen name="setting_title_size">20sp</dimen>
     <dimen name="application_name">18sp</dimen>
 
+    <dimen name="main_banner_height">150dp</dimen>
 
     <dimen name="text_padding_bottom">10dp</dimen>
     <dimen name="adv_margintop">3dp</dimen>
@@ -17,4 +18,14 @@
     <dimen name="item_layout_width">115dp</dimen>
     <dimen name="item_layout_height">113dp</dimen>
     <dimen name="bbuton_rounded_corner_radius">20sp</dimen>
+    <dimen name="desktop_app_item_margin_left">2.5dp</dimen>
+    <dimen name="desktop_app_item_margin">1dp</dimen>
+
+
+    <dimen name="desktop_app_out">115dp</dimen>
+    <dimen name="desktop_app_image_in">116dp</dimen>
+
+    <dimen name="desktop_app_in_padding_bottom">20dp</dimen>
+    <dimen name="desktop_app_in_app_name_padding">3dp</dimen>
+    <dimen name="desktop_app_in_app_name_margin_top">-30dp</dimen>
 </resources>

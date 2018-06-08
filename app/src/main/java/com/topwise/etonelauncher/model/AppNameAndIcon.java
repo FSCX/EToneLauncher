@@ -90,7 +90,8 @@ public class AppNameAndIcon {
         for (PackageInfo packgeInfo : packgeInfos) {
             //去除系统应用
             ApplicationInfo appInfo = packgeInfo.applicationInfo;
-            if (!filterApp(appInfo)&&!appInfo.packageName.equals("com.topwise.etone.demo")) {
+            if (!filterApp(appInfo)&&!appInfo.packageName.equals("com.topwise.etone.demo")
+                    &&!appInfo.packageName.equals("com.topwise.etoneITMS")) {
                 continue;
             }
 
@@ -126,7 +127,7 @@ public class AppNameAndIcon {
         for (PackageInfo packgeInfo : packgeInfos) {
             //去除系统应用
             ApplicationInfo appInfo = packgeInfo.applicationInfo;
-            Log.i("msg","pkgName:   " + appInfo.packageName);
+            Log.i("msg","pkgName:" + appInfo.packageName);
             if (appInfo.packageName.equals(pkgName)) {
 
                 String packageName = packgeInfo.packageName;
